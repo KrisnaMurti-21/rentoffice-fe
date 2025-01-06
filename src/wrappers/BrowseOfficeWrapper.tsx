@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import OfficeCard from "../components/OfficeCard";
-import { Office } from "../types/type";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import OfficeCard from "../components/OfficeCard";
+import apiClient from "../services/apiService";
+import { Office } from "../types/type";
 
 export default function BrowseOfficeWrapper() {
   const [offices, setOffices] = useState<Office[]>([]);
@@ -10,12 +10,8 @@ export default function BrowseOfficeWrapper() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios
-      .get("http://rentoffice.test/api/offices", {
-        headers: {
-          "X-API-KEY": "120adcklandkla203klandv",
-        },
-      })
+    apiClient
+      .get("offices")
       .then((response) => {
         setOffices(response.data.data);
         setLoading(false);
@@ -45,8 +41,8 @@ export default function BrowseOfficeWrapper() {
       </h2>
       <div className="grid grid-cols-3 gap-[30px]">
         {offices.map((office) => (
-          <Link to={`/office/${office.slug}`}>
-            <OfficeCard key={office.id} office={office}></OfficeCard>
+          <Link to={`/office/${office.slug}`} key={office.id}>
+            <OfficeCard office={office}></OfficeCard>
           </Link>
         ))}
       </div>

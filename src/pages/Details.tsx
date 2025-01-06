@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Office } from "../types/type";
 import axios from "axios";
+import apiClient from "../services/apiService";
 
 export default function Details() {
   const { slug } = useParams<{ slug: string }>();
@@ -12,12 +13,8 @@ export default function Details() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios
-      .get(`http://rentoffice.test/api/office/${slug}`, {
-        headers: {
-          "X-API-KEY": "120adcklandkla203klandv",
-        },
-      })
+    apiClient
+      .get(`office/${slug}`)
       .then((response) => {
         setOffice(response.data.data);
         setLoading(false);
@@ -33,7 +30,7 @@ export default function Details() {
   if (error) {
     return <p>Error loading data: {error}</p>;
   }
-  const baseURL = "http://rentoffice.test/storage";
+  const baseURL = import.meta.env.VITE_STORAGE_URL;
   return (
     <>
       <Navbar />

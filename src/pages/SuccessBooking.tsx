@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 export default function SuccessBooking() {
   const location = useLocation();
   const { office, booking } = location.state;
-  const baseURL = "http://rentoffice.test/storage";
+  const baseURL = import.meta.env.VITE_STORAGE_URL;;
   return (
     <>
       <Navbar />

@@ -1,7 +1,6 @@
 import { Office } from "../types/type";
-
-export default function OfficeCard({office}: OfficeCardProps) {
-  const baseURL = "http://rentoffice.test/storage";
+const baseURL = import.meta.env.VITE_STORAGE_URL;
+export default function OfficeCard({ office }: OfficeCardProps) {
   return (
     <div className="card">
       <div className="flex flex-col rounded-[20px] border border-[#E0DEF7] bg-white overflow-hidden">

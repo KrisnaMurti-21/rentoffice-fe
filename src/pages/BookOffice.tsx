@@ -5,6 +5,7 @@ import { Office } from "../types/type";
 import { z } from "zod";
 import axios from "axios";
 import { bookingSchema } from "../types/validationBooking";
+import apiClient, { isAxiosError } from "../services/apiService";
 
 export default function BookOffice() {
   const { slug } = useParams<{ slug: string }>();
@@ -30,12 +31,8 @@ export default function BookOffice() {
 
   useEffect(() => {
     console.log("Fetching office data...");
-    axios
-      .get(`http://rentoffice.test/api/office/${slug}`, {
-        headers: {
-          "X-API-KEY": "120adcklandkla203klandv",
-        },
-      })
+    apiClient
+      .get(`office/${slug}`)
       .then((response) => {
         console.log("Office data fetched successfully:", response.data.data);
         setOffice(response.data.data);
@@ -53,7 +50,7 @@ export default function BookOffice() {
         setLoading(false);
       })
       .catch((error: unknown) => {
-        if (axios.isAxiosError(error)) {
+        if (isAxiosError(error)) {
           console.error("Error fetching office data:", error.message);
           setError(error.message);
         } else {
@@ -76,7 +73,7 @@ export default function BookOffice() {
     return <p>Office not found</p>;
   }
 
-  const baseURL = "http://rentoffice.test/storage";
+  const baseURL = import.meta.env.VITE_STORAGE_URL;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -99,15 +96,9 @@ export default function BookOffice() {
     console.log("Form data is valid. Submitting...", formData);
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "http://rentoffice.test/api/booking-transaction",
-        { ...formData },
-        {
-          headers: {
-            "X-API-KEY": "120adcklandkla203klandv",
-          },
-        }
-      );
+      const response = await apiClient.post("booking-transaction", {
+        ...formData,
+      });
       console.log("Form data submitted successfully:", response.data);
       navigate("/success-booking", {
         state: { office, booking: response.data },

@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { z } from "zod";
 import Navbar from "../components/Navbar";
+import apiClient, { isAxiosError } from "../services/apiService";
 import { BookingDetails } from "../types/type";
 import { viewBookingSchema } from "../types/validationBooking";
 
@@ -17,7 +17,7 @@ export default function CheckBooking() {
     null
   );
   const [error, setError] = useState<string | null>(null);
-  const baseURL = "http://rentoffice.test/storage";
+  const baseURL = import.meta.env.VITE_STORAGE_URL;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,19 +37,11 @@ export default function CheckBooking() {
     console.log("Form data is valid. Submitting...", formData);
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "http://rentoffice.test/api/check-booking",
-        { ...formData },
-        {
-          headers: {
-            "X-API-KEY": "120adcklandkla203klandv",
-          },
-        }
-      );
+      const response = await apiClient.post("check-booking", { ...formData });
       console.log("We are checking your booking:", response.data.data);
       setBookingDetails(response.data.data);
     } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         setError(error.response?.data.message || error.message);
       } else {
         setError("An error occurred while fetching data.");
@@ -254,7 +246,9 @@ export default function CheckBooking() {
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="font-semibold">Duration</p>
-                  <p className="font-bold">{bookingDetails.duration} Days Working</p>
+                  <p className="font-bold">
+                    {bookingDetails.duration} Days Working
+                  </p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="font-semibold">Total Amount</p>

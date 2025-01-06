@@ -1,7 +1,7 @@
 import { City } from "../types/type";
 
+const baseUrl = import.meta.env.VITE_STORAGE_URL;
 const CityCard = ({ city }: CityCardProps) => {
-  const baseUrl = "http://rentoffice.test/storage";
   return (
     <div className="card">
       <div className="relative flex shrink-0 w-[230px] h-[300px] rounded-[20px] overflow-hidden">

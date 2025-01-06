@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import OfficeCard from "../components/OfficeCard";
+import apiClient from "../services/apiService";
 import { City } from "../types/type";
 
 export default function CityDetails() {
@@ -12,12 +12,8 @@ export default function CityDetails() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios
-      .get(`http://rentoffice.test/api/city/${slug}`, {
-        headers: {
-          "X-API-KEY": "120adcklandkla203klandv",
-        },
-      })
+    apiClient
+      .get(`city/${slug}`)
       .then((response) => {
         setCity(response.data.data);
         setLoading(false);
@@ -39,7 +35,7 @@ export default function CityDetails() {
   if (!city) {
     return <p>City not found</p>;
   }
-  const baseURL = "http://rentoffice.test/storage";
+  const baseURL = import.meta.env.VITE_STORAGE_URL;
   return (
     <>
       <Navbar />
