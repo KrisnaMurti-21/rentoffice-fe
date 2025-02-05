@@ -11,6 +11,7 @@ export default function Details() {
   const [office, setOffice] = useState<Office | null>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const mapsApi = import.meta.env.VITE_MAPS_API;
 
   useEffect(() => {
     apiClient
@@ -208,7 +209,7 @@ export default function Details() {
               <iframe
                 className="h-full w-full border-0"
                 frameBorder={0}
-                src={`https://www.google.com/maps/embed/v1/place?q=${office?.name},&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`}
+                src={`https://www.google.com/maps/embed/v1/place?q=${office?.name},&key=${mapsApi}`}
               />
             </div>
             <a
